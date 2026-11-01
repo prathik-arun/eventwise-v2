@@ -1,14 +1,12 @@
-'use strict';
-
-const js = require('@eslint/js');
-const globals = require('globals');
+import js from '@eslint/js';
+import globals from 'globals';
 
 /** Rules that keep functions small and the code easy to follow. */
 const maintainability = {
   complexity: ['error', 10],
   'max-depth': ['error', 3],
   'max-params': ['error', 4],
-  'max-lines-per-function': ['error', { max: 60, skipBlankLines: true, skipComments: true }],
+  'max-lines-per-function': ['error', { max: 40, skipBlankLines: true, skipComments: true }],
   'no-nested-ternary': 'error',
   'no-else-return': 'error',
   'no-lonely-if': 'error',
@@ -28,25 +26,22 @@ const style = {
   'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
   'no-param-reassign': ['error', { props: false }],
   'no-implicit-coercion': 'error',
+  'no-duplicate-imports': 'error',
 };
 
-module.exports = [
+export default [
   { ignores: ['node_modules/**', 'coverage/**', 'index.html'] },
   js.configs.recommended,
   {
-    // Browser code: plain scripts that share the `Eventwise` namespace.
+    // Browser code: ES modules, one responsibility per file.
     files: ['src/js/**/*.js'],
-    languageOptions: {
-      ecmaVersion: 2023,
-      sourceType: 'script',
-      globals: { ...globals.browser, Eventwise: 'readonly' },
-    },
+    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: globals.browser },
     rules: { ...maintainability, ...style },
   },
   {
     // Node code: tests, helpers and tooling.
     files: ['tests/**/*.js', 'scripts/**/*.js', 'eslint.config.js'],
-    languageOptions: { ecmaVersion: 2023, sourceType: 'commonjs', globals: globals.node },
+    languageOptions: { ecmaVersion: 2023, sourceType: 'module', globals: globals.node },
     rules: { ...style, 'max-lines-per-function': 'off' },
   },
 ];

@@ -1,10 +1,8 @@
-'use strict';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as budget from '../../src/js/planner/budget.js';
+import { PROFILES as profiles } from '../../src/js/data/events/index.js';
 
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { budget, profiles } = loadCore();
 const sumOf = (rows) => rows.reduce((total, row) => total + row.amount, 0);
 
 describe('allocateBudget', () => {

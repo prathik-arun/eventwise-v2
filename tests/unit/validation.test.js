@@ -1,10 +1,7 @@
-'use strict';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as validation from '../../src/js/planner/validation.js';
 
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { validation } = loadCore();
 const today = new Date(2026, 0, 1);
 
 const validInput = (overrides = {}) => ({

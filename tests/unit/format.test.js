@@ -1,10 +1,6 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { format } = loadCore();
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as format from '../../src/js/lib/format.js';
 
 describe('formatINR', () => {
   it('uses Indian digit grouping with no decimals', () => {

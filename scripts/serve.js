@@ -1,15 +1,14 @@
-'use strict';
-
 /**
  * Tiny static file server for local development: `npm start`.
- * Not needed to use the app (index.html also works when opened directly),
- * but handy for trying it the way GitHub Pages serves it.
+ * It serves the modular source in `src/` (ES modules need a server, not
+ * `file://`). The finished single-file page is the root `index.html`.
  */
-const fs = require('node:fs');
-const http = require('node:http');
-const path = require('node:path');
+import { readFile } from 'node:fs';
+import { createServer } from 'node:http';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const ROOT = path.join(__dirname, '..');
+const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'src');
 const PORT = Number(process.env.PORT) || 8080;
 
 const CONTENT_TYPES = {
@@ -19,22 +18,25 @@ const CONTENT_TYPES = {
   '.json': 'application/json; charset=utf-8',
 };
 
-/** @returns {string | null} the file to serve for `urlPath`, or null if it is outside the project */
+/** @returns {string | null} the file to serve for `urlPath`, or null if it is outside `src/` */
 function resolveFile(urlPath) {
   const relative = decodeURIComponent(urlPath.split('?')[0]);
   const file = path.join(ROOT, relative.endsWith('/') ? `${relative}index.html` : relative);
   return file.startsWith(ROOT + path.sep) ? file : null;
 }
 
-function handleRequest(request, response) {
-  let file;
+function safeResolve(urlPath) {
   try {
-    file = resolveFile(request.url);
+    return resolveFile(urlPath);
   } catch {
-    file = null; // malformed URL encoding
+    return null; // malformed URL encoding
   }
+}
 
-  fs.readFile(file ?? '', (error, content) => {
+function handleRequest(request, response) {
+  const file = safeResolve(request.url);
+
+  readFile(file ?? '', (error, content) => {
     if (!file || error) {
       response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
       response.end('Not found');
@@ -46,6 +48,6 @@ function handleRequest(request, response) {
   });
 }
 
-http.createServer(handleRequest).listen(PORT, '127.0.0.1', () => {
-  console.log(`Eventwise running at http://127.0.0.1:${PORT}`);
+createServer(handleRequest).listen(PORT, '127.0.0.1', () => {
+  console.log(`Eventwise (source) running at http://127.0.0.1:${PORT}`);
 });

@@ -1,24 +1,19 @@
-'use strict';
-
 /**
- * Starts the whole app in jsdom, exactly as a browser would: the page's own
- * `<script src>` tags are inlined in order and run.
+ * Starts the whole app in jsdom exactly as shipped: the generated single-file
+ * page is built from `src/` and loaded, so the tests run the real bundle.
  */
-const { JSDOM } = require('jsdom');
-const { SCRIPT_TAG, readIndexHtml, readScript } = require('./load-core');
+import { JSDOM } from 'jsdom';
+import { buildBundle } from '../../scripts/build.js';
 
 const FLUSH_MS = 30;
+const bundledHtml = buildBundle();
 
 /**
  * @param {{geolocation?: object, claude?: object}} [options] browser features to fake
  * @returns {Window} the page's window
  */
-function bootApp({ geolocation, claude } = {}) {
-  const html = readIndexHtml().replace(
-    SCRIPT_TAG,
-    (_tag, src) => `<script>${readScript(src)}</script>`,
-  );
-  const dom = new JSDOM(html, {
+export function bootApp({ geolocation, claude } = {}) {
+  const dom = new JSDOM(bundledHtml, {
     runScripts: 'dangerously',
     url: 'http://localhost/',
     beforeParse(window) {
@@ -34,7 +29,7 @@ function bootApp({ geolocation, claude } = {}) {
 }
 
 /** `YYYY-MM-DD` for a date `days` from today. */
-function isoDateIn(days) {
+export function isoDateIn(days) {
   const date = new Date();
   date.setDate(date.getDate() + days);
   const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -43,7 +38,7 @@ function isoDateIn(days) {
 }
 
 /** Types into the form and submits it. Anything left out gets a sensible default. */
-function submitPlanForm(window, values = {}) {
+export function submitPlanForm(window, values = {}) {
   const $ = (selector) => window.document.querySelector(selector);
   $('#type').value = values.type ?? 'wedding';
   $('#type').dispatchEvent(new window.Event('change'));
@@ -55,12 +50,10 @@ function submitPlanForm(window, values = {}) {
 }
 
 /** Lets promises and timers started by the page settle. */
-const settle = () => new Promise((resolve) => setTimeout(resolve, FLUSH_MS));
+export const settle = () => new Promise((resolve) => setTimeout(resolve, FLUSH_MS));
 
 /** Finds a button inside the results whose text matches `pattern`. */
-function findButton(window, pattern) {
+export function findButton(window, pattern) {
   const buttons = [...window.document.querySelectorAll('#results button')];
   return buttons.find((candidate) => pattern.test(candidate.textContent));
 }
-
-module.exports = { bootApp, findButton, isoDateIn, settle, submitPlanForm };

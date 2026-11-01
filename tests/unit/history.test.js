@@ -1,11 +1,12 @@
-'use strict';
-
-const { beforeEach, describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { createMemoryStorage, loadCore } = require('../helpers/load-core');
+import { beforeEach, describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as constants from '../../src/js/data/constants.js';
+import * as storage from '../../src/js/lib/storage.js';
+import * as history from '../../src/js/planner/history.js';
+import { createMemoryStorage } from '../helpers/memory-storage.js';
 
 const storageBacking = createMemoryStorage();
-const { constants, history, storage } = loadCore({ localStorage: storageBacking });
+globalThis.localStorage = storageBacking;
 const { STORAGE_KEYS, LIMITS } = constants;
 
 const request = (id, overrides = {}) => ({

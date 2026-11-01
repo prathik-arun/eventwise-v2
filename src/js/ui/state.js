@@ -1,10 +1,10 @@
-'use strict';
+import { $ } from '../lib/dom.js';
 
 /**
  * The few pieces of state shared between UI parts, plus the screen-reader
  * announcer. Everything else lives in the part of the page that owns it.
  */
-Eventwise.ui.state = {
+export const state = {
   /** The plan currently on screen, or null before the first one is created. */
   plan: null,
   /** The user's shared location, if any. Kept in memory only, never stored. */
@@ -17,6 +17,6 @@ Eventwise.ui.state = {
 };
 
 /** Announces `message` politely to screen readers through the page's status region. */
-Eventwise.ui.announce = (message) => {
-  Eventwise.dom.$('#status').textContent = message;
-};
+export function announce(message) {
+  $('#status').textContent = message;
+}

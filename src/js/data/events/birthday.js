@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.birthday = {
+export const birthday = {
   label: 'Birthday',
   icon: '🎂',
   minPerGuest: 600,

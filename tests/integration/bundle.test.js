@@ -1,10 +1,8 @@
-'use strict';
-
-const fs = require('node:fs');
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { JSDOM } = require('jsdom');
-const { buildBundle, OUTPUT_FILE } = require('../../scripts/build');
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import { describe, it } from 'node:test';
+import { JSDOM } from 'jsdom';
+import { OUTPUT_FILE, buildBundle } from '../../scripts/build.js';
 
 describe('the single-file index.html', () => {
   it('is up to date with src/ (run `npm run build` if this fails)', () => {
@@ -13,7 +11,7 @@ describe('the single-file index.html', () => {
 
   it('needs no other files: nothing is loaded by URL', () => {
     const html = fs.readFileSync(OUTPUT_FILE, 'utf8');
-    assert.doesNotMatch(html, /<script src=|<link rel="stylesheet"/);
+    assert.doesNotMatch(html, /<script[^>]* src=|<link rel="stylesheet"/);
   });
 
   it('runs on its own and builds a plan', () => {

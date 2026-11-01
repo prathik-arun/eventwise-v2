@@ -1,11 +1,11 @@
-'use strict';
+import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
+import { JSDOM } from 'jsdom';
 
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { bootApp } = require('../helpers/boot-app');
-
-const window = bootApp();
-const { button, el, labelledSection, onEnter } = window.Eventwise.dom;
+// The DOM helpers use the global `document`, as they do in a browser.
+const { window } = new JSDOM('<!doctype html><body></body>');
+globalThis.document = window.document;
+const { button, el, labelledSection, onEnter } = await import('../../src/js/lib/dom.js');
 
 describe('el', () => {
   it('never parses text as HTML', () => {

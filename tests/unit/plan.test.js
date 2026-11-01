@@ -1,10 +1,9 @@
-'use strict';
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as dates from '../../src/js/lib/dates.js';
+import * as plan from '../../src/js/planner/plan.js';
+import * as validation from '../../src/js/planner/validation.js';
 
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { dates, plan, validation } = loadCore();
 const today = new Date(2026, 0, 1);
 
 function planFor(input = {}) {

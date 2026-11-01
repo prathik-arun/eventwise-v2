@@ -22,7 +22,7 @@ It is a static site with no runtime dependencies. The root `index.html` is a **s
 - open it in a browser straight from disk, or
 - upload or preview it anywhere that serves one HTML file, or
 - host the repository with GitHub Pages, or
-- run `npm start` and visit <http://127.0.0.1:8080>.
+- run `npm start` and visit <http://127.0.0.1:8080> to try the modular source in `src/` directly.
 
 The readable source lives in `src/`. After changing it, run `npm run build` to regenerate the root `index.html` (a test fails if it is out of date).
 
@@ -32,12 +32,12 @@ The readable source lives in `src/`. After changing it, run `npm run build` to r
 
 ```
 index.html            GENERATED single-file page (do not edit; run `npm run build`)
-scripts/              build.js (creates index.html) and serve.js (dev server)
+scripts/              build.js (bundles src/ into index.html) and serve.js (dev server)
 src/
-  index.html          page markup; lists the scripts in load order
+  index.html          page markup; loads js/ui/app.js as an ES module
   css/styles.css      all styles, grouped by section, light and dark themes
   js/
-    namespace.js      creates the single global `Eventwise` namespace
+    types.js          JSDoc definitions of the main data shapes
     data/             constants, shared copy, and one file per event type
       events/*.js     budget split, milestones, vendor tasks, ideas, venues, shopping
     lib/              dates, formatting, DOM helpers, safe localStorage
@@ -47,22 +47,22 @@ src/
     ui/               everything that touches the page: form, history list,
                       one builder per plan section, and app.js (entry point)
 tests/
-  unit/               one suite per module, run directly in Node
-  integration/        the whole page driven in jsdom
-  helpers/            loaders shared by the suites
+  unit/               one suite per module, importing the real source files
+  integration/        the whole built page driven in jsdom
+  helpers/            page loader and in-memory storage shared by the suites
 ```
 
 Design choices worth knowing:
 
-- **Plain scripts, one namespace.** Each file attaches its public API to `Eventwise` and may only use files listed above it in `src/index.html`. This keeps `index.html` working when opened from disk, where browsers block ES modules.
-- **Logic is separate from the DOM.** Everything under `src/js/planner`, `src/js/assistant` and `src/js/lib` (except `dom.js`) never touches `document`, so it is unit-tested in plain Node against the real source files.
+- **ES modules in the source, one file in the output.** Every file imports what it needs and exports its public functions, so dependencies are explicit. `npm run build` bundles them with esbuild into the single root `index.html`, which keeps working when opened from disk, uploaded as one file, or hosted on GitHub Pages.
+- **Logic is separate from the DOM.** Everything under `src/js/planner`, `src/js/assistant` and `src/js/lib` (except `dom.js`) never touches `document`, so its tests simply import the real modules in plain Node.
 - **Data is separate from code.** An event type is one self-contained data file.
 - **Small, documented functions.** ESLint enforces limits on complexity, nesting, parameters and function length.
 
 ### Adding an event type
 
 1. Copy an existing file in `src/js/data/events/` and edit it (the allocation must add up to 100 and end with `Contingency`; every category needs vendor tasks).
-2. Add a `<script>` tag for it in `src/index.html`, with the other event files.
+2. Import it and add it to the list in `src/js/data/events/index.js`.
 3. Run `npm run build` to regenerate the single-file `index.html`.
 4. Run `npm test`. The profile tests check the data for consistency, and everything else (form, plan, tests that loop over all types) picks the new type up automatically.
 
@@ -82,7 +82,7 @@ npm run check        # lint + format check + all tests
 | `npm run build`         | Regenerates the single-file `index.html` from `src/`               |
 | `npm start`             | Serves the project locally                                         |
 
-Requires Node 22 or newer. The tests use [jsdom](https://github.com/jsdom/jsdom) for the page-level flows (form errors, every event type, XSS safety, location, history, spending tracker, assistant fallbacks). GitHub Actions runs the same checks on every push and pull request.
+Requires Node 22.12 or newer. The tests use [jsdom](https://github.com/jsdom/jsdom) for the page-level flows (form errors, every event type, XSS safety, location, history, spending tracker, assistant fallbacks). GitHub Actions runs the same checks on every push and pull request.
 
 ## Design notes
 

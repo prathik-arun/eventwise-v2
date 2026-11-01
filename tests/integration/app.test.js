@@ -1,8 +1,6 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { bootApp, findButton, isoDateIn, settle, submitPlanForm } = require('../helpers/boot-app');
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import { bootApp, findButton, isoDateIn, settle, submitPlanForm } from '../helpers/boot-app.js';
 
 const text = (window, selector) => window.document.querySelector(selector).textContent;
 const all = (window, selector) => [...window.document.querySelectorAll(selector)];

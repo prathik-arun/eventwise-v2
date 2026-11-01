@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.corporate = {
+export const corporate = {
   label: 'Corporate event',
   icon: '💼',
   minPerGuest: 1500,

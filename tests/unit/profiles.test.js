@@ -1,10 +1,8 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { constants, content, profiles } = loadCore();
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as constants from '../../src/js/data/constants.js';
+import * as content from '../../src/js/data/content.js';
+import { PROFILES as profiles } from '../../src/js/data/events/index.js';
 
 describe('event profiles', () => {
   it('cover the eight supported event types', () => {

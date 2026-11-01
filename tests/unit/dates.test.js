@@ -1,10 +1,6 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { dates } = loadCore();
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as dates from '../../src/js/lib/dates.js';
 
 describe('parseISODate', () => {
   it('parses a real calendar date as local midnight', () => {

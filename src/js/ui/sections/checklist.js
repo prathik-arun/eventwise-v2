@@ -1,67 +1,78 @@
-'use strict';
+import { PROFILES } from '../../data/events/index.js';
+import { el, labelledSection } from '../../lib/dom.js';
+import { formatINR } from '../../lib/format.js';
+import * as storage from '../../lib/storage.js';
+import { checklistKey } from '../../planner/history.js';
 
 /** The vendor checklist, with progress saved per plan. */
-Eventwise.ui.checklist = (() => {
-  const { formatINR } = Eventwise.format;
-  const { el, labelledSection } = Eventwise.dom;
-  const { checklistKey } = Eventwise.history;
-  const storage = Eventwise.storage;
 
-  const taskId = (category, index) => `${category}|${index}`;
+const taskId = (category, index) => `${category}|${index}`;
 
-  /** Tasks of the categories that appear in this plan's budget. */
-  const countTasks = (vendorTasks, rows) =>
-    rows.reduce((count, { category }) => count + (vendorTasks[category]?.length ?? 0), 0);
+/** Tasks of the categories that appear in this plan's budget. */
+const countTasks = (vendorTasks, rows) =>
+  rows.reduce((count, { category }) => count + (vendorTasks[category]?.length ?? 0), 0);
 
-  function buildChecklistSection({ request, rows }) {
-    const { vendorTasks } = Eventwise.profiles[request.type];
-    const storageKey = checklistKey(request.id);
-    const done = new Set(storage.readList(storageKey));
-    const total = countTasks(vendorTasks, rows);
+/** The "N of M done" text and the progress bar, kept in step by `show`. */
+function createProgress(total) {
+  const text = el('p', { class: 'ok', 'aria-live': 'polite' });
+  const meter = el('progress', { 'aria-label': 'Vendor tasks completed' });
+  const show = (doneCount) => {
+    const finished = Math.min(doneCount, total);
+    text.textContent = `${finished} of ${total} vendor tasks done`;
+    meter.max = total || 1;
+    meter.value = finished;
+  };
+  return { text, meter, show };
+}
 
-    const progressText = el('p', { class: 'ok', 'aria-live': 'polite' });
-    const meter = el('progress', { 'aria-label': 'Vendor tasks completed' });
+function buildTask(id, label, isDone, onToggle) {
+  const checkbox = el('input', { type: 'checkbox' });
+  checkbox.checked = isDone;
+  checkbox.addEventListener('change', () => onToggle(id, checkbox.checked));
+  return el('label', {}, checkbox, label);
+}
 
-    const showProgress = () => {
-      const finished = Math.min(done.size, total);
-      progressText.textContent = `${finished} of ${total} vendor tasks done`;
-      meter.max = total || 1;
-      meter.value = finished;
-    };
+/** One category's tasks in a fieldset. */
+function buildCategoryGroup({ category, amount }, tasks, done, onToggle) {
+  const items = tasks.map((label, index) => {
+    const id = taskId(category, index);
+    return buildTask(id, label, done.has(id), onToggle);
+  });
+  return el(
+    'fieldset',
+    {},
+    el('legend', {}, `${category} (${formatINR(amount)})`),
+    el('div', { class: 'checks' }, ...items),
+  );
+}
 
-    function buildTask(id, text) {
-      const checkbox = el('input', { type: 'checkbox' });
-      checkbox.checked = done.has(id);
-      checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-          done.add(id);
-        } else {
-          done.delete(id);
-        }
-        storage.write(storageKey, [...done]);
-        showProgress();
-      });
-      return el('label', {}, checkbox, text);
+function buildChecklistSection({ request, rows }) {
+  const { vendorTasks } = PROFILES[request.type];
+  const storageKey = checklistKey(request.id);
+  const done = new Set(storage.readList(storageKey));
+  const progress = createProgress(countTasks(vendorTasks, rows));
+
+  const onToggle = (id, checked) => {
+    if (checked) {
+      done.add(id);
+    } else {
+      done.delete(id);
     }
+    storage.write(storageKey, [...done]);
+    progress.show(done.size);
+  };
+  const groups = rows
+    .filter(({ category }) => vendorTasks[category])
+    .map((row) => buildCategoryGroup(row, vendorTasks[row.category], done, onToggle));
 
-    const groups = rows
-      .filter(({ category }) => vendorTasks[category])
-      .map(({ category, amount }) =>
-        el(
-          'fieldset',
-          {},
-          el('legend', {}, `${category} (${formatINR(amount)})`),
-          el(
-            'div',
-            { class: 'checks' },
-            ...vendorTasks[category].map((text, index) => buildTask(taskId(category, index), text)),
-          ),
-        ),
-      );
+  progress.show(done.size);
+  return labelledSection(
+    'checklist-heading',
+    'Vendor checklist',
+    progress.text,
+    progress.meter,
+    ...groups,
+  );
+}
 
-    showProgress();
-    return labelledSection('checklist-heading', 'Vendor checklist', progressText, meter, ...groups);
-  }
-
-  return { buildChecklistSection };
-})();
+export { buildChecklistSection };

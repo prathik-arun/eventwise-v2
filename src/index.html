@@ -106,53 +106,6 @@
       </main>
     </div>
 
-    <!--
-      Scripts run in this order; each one may use only what the scripts above it
-      registered on the `Eventwise` namespace.
-    -->
-    <script src="js/namespace.js"></script>
-
-    <!-- Data -->
-    <script src="js/data/constants.js"></script>
-    <script src="js/data/content.js"></script>
-    <script src="js/data/events/wedding.js"></script>
-    <script src="js/data/events/birthday.js"></script>
-    <script src="js/data/events/community.js"></script>
-    <script src="js/data/events/engagement.js"></script>
-    <script src="js/data/events/babyshower.js"></script>
-    <script src="js/data/events/anniversary.js"></script>
-    <script src="js/data/events/corporate.js"></script>
-    <script src="js/data/events/housewarming.js"></script>
-
-    <!-- Helpers -->
-    <script src="js/lib/dates.js"></script>
-    <script src="js/lib/format.js"></script>
-    <script src="js/lib/dom.js"></script>
-    <script src="js/lib/storage.js"></script>
-
-    <!-- Planning logic (no DOM) -->
-    <script src="js/planner/validation.js"></script>
-    <script src="js/planner/budget.js"></script>
-    <script src="js/planner/timeline.js"></script>
-    <script src="js/planner/insights.js"></script>
-    <script src="js/planner/links.js"></script>
-    <script src="js/planner/plan.js"></script>
-    <script src="js/planner/history.js"></script>
-
-    <!-- Assistant (no DOM) -->
-    <script src="js/assistant/offline.js"></script>
-    <script src="js/assistant/ai.js"></script>
-
-    <!-- User interface -->
-    <script src="js/ui/state.js"></script>
-    <script src="js/ui/form.js"></script>
-    <script src="js/ui/history-view.js"></script>
-    <script src="js/ui/sections/overview.js"></script>
-    <script src="js/ui/sections/budget.js"></script>
-    <script src="js/ui/sections/checklist.js"></script>
-    <script src="js/ui/sections/venues.js"></script>
-    <script src="js/ui/sections/assistant.js"></script>
-    <script src="js/ui/results.js"></script>
-    <script src="js/ui/app.js"></script>
+    <script type="module" src="js/ui/app.js"></script>
   </body>
 </html>

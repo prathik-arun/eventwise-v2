@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.wedding = {
+export const wedding = {
   label: 'Wedding',
   icon: '💍',
   minPerGuest: 1500,

@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.anniversary = {
+export const anniversary = {
   label: 'Anniversary',
   icon: '🥂',
   minPerGuest: 1000,

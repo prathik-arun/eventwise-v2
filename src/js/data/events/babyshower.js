@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.babyshower = {
+export const babyshower = {
   label: 'Baby shower',
   icon: '🍼',
   minPerGuest: 700,

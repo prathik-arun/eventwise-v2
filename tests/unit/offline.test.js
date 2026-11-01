@@ -1,10 +1,8 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { budget, offline, timeline } = loadCore();
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as offline from '../../src/js/assistant/offline.js';
+import * as budget from '../../src/js/planner/budget.js';
+import * as timeline from '../../src/js/planner/timeline.js';
 
 function makePlan(overrides = {}) {
   const request = {

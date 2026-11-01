@@ -1,12 +1,11 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { createMemoryStorage, loadCore } = require('../helpers/load-core');
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as storage from '../../src/js/lib/storage.js';
+import { createMemoryStorage } from '../helpers/memory-storage.js';
 
 describe('storage', () => {
   it('round-trips lists and records', () => {
-    const { storage } = loadCore({ localStorage: createMemoryStorage() });
+    globalThis.localStorage = createMemoryStorage();
     storage.write('list', ['a', 'b']);
     storage.write('record', { a: 1 });
     assert.deepEqual(storage.readList('list'), ['a', 'b']);
@@ -18,7 +17,7 @@ describe('storage', () => {
     memory.setItem('corrupt', '{not json');
     memory.setItem('object', '{"a":1}');
     memory.setItem('array', '[1]');
-    const { storage } = loadCore({ localStorage: memory });
+    globalThis.localStorage = memory;
     assert.deepEqual(storage.readList('missing'), []);
     assert.deepEqual(storage.readList('corrupt'), []);
     assert.deepEqual(storage.readList('object'), []);
@@ -27,7 +26,7 @@ describe('storage', () => {
   });
 
   it('removes keys', () => {
-    const { storage } = loadCore({ localStorage: createMemoryStorage() });
+    globalThis.localStorage = createMemoryStorage();
     storage.write('k', ['x']);
     storage.remove('k');
     assert.deepEqual(storage.readList('k'), []);
@@ -45,7 +44,7 @@ describe('storage', () => {
         throw new Error('blocked');
       },
     };
-    const { storage } = loadCore({ localStorage: blocked });
+    globalThis.localStorage = blocked;
     assert.doesNotThrow(() => storage.write('k', []));
     assert.doesNotThrow(() => storage.remove('k'));
     assert.deepEqual(storage.readList('k'), []);

@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.community = {
+export const community = {
   label: 'Community event',
   icon: '🏘️',
   minPerGuest: 150,

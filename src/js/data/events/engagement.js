@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.engagement = {
+export const engagement = {
   label: 'Engagement',
   icon: '💑',
   minPerGuest: 1200,

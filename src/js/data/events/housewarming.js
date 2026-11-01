@@ -1,6 +1,4 @@
-'use strict';
-
-Eventwise.profiles.housewarming = {
+export const housewarming = {
   label: 'Housewarming',
   icon: '🏡',
   minPerGuest: 500,

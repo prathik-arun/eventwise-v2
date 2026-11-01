@@ -1,10 +1,7 @@
-'use strict';
-
-const { describe, it } = require('node:test');
-const assert = require('node:assert/strict');
-const { loadCore } = require('../helpers/load-core');
-
-const { budget, links } = loadCore();
+import { describe, it } from 'node:test';
+import assert from 'node:assert/strict';
+import * as budget from '../../src/js/planner/budget.js';
+import * as links from '../../src/js/planner/links.js';
 
 describe('amazonSearchUrl', () => {
   it('encodes the query and stays on amazon.in', () => {
