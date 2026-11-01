@@ -1,0 +1,576 @@
+/*
+ * Eventwise styles.
+ *
+ * Contents: 1 Tokens · 2 Base · 3 Layout · 4 Form controls · 5 Buttons ·
+ *           6 Plan sections · 7 Utilities · 8 Print · 9 Motion
+ */
+
+/* 1. Tokens ---------------------------------------------------------------
+ * Colours are defined once with light-dark(). The page follows the visitor's
+ * system theme, and `data-theme="light|dark"` on <html> overrides it. */
+:root {
+  color-scheme: light dark;
+
+  --bg: light-dark(#faf9ff, #14131a);
+  --fg: light-dark(#1c1a29, #f1effc);
+  --muted: light-dark(#55526b, #b9b5d1);
+  --card: light-dark(#fff, #1e1c29);
+  --line: light-dark(#d9d6ec, #383552);
+  --accent: light-dark(#4b2fd6, #b5a9ff);
+  --on-accent: light-dark(#fff, #14131a);
+  --warn: light-dark(#8a3b00, #ffc58f);
+  --warn-bg: light-dark(#fff1e3, #3a2a1a);
+  --ok: light-dark(#0c6b3a, #7fe0a8);
+
+  --hero-start: #2b1c8f;
+  --hero-end: #5a3cf0;
+  --hero-text: #eee9ff;
+  --shadow: 0 1px 2px rgb(30 15 90 / 6%), 0 10px 28px rgb(30 15 90 / 7%);
+
+  --radius-card: 16px;
+  --radius-control: 8px;
+  --tap-target: 44px;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+/* 2. Base ----------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  padding-top: env(safe-area-inset-top, 0);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  scroll-padding-top: env(safe-area-inset-top, 0);
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(
+      50rem 24rem at 0% -8%,
+      color-mix(in srgb, var(--accent) 16%, transparent),
+      transparent 70%
+    ),
+    var(--bg);
+  background-attachment: fixed;
+  color: var(--fg);
+  font:
+    16px/1.55 system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.1rem;
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.35rem;
+}
+
+h3 {
+  font-size: 1.05rem;
+}
+
+h4 {
+  margin: 0.75rem 0 0.25rem;
+}
+
+:focus-visible {
+  outline: 3px solid var(--fg);
+  outline-offset: 2px;
+}
+
+.lead,
+.meta,
+.hint {
+  margin: 0.25rem 0 1rem;
+  color: var(--muted);
+}
+
+/* 3. Layout --------------------------------------------------------------- */
+.wrap {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+header {
+  margin: 0.5rem 0 1rem;
+  padding: 1.75rem 1.5rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--hero-start), var(--hero-end));
+  color: #fff;
+}
+
+header .lead {
+  max-width: 42rem;
+  margin: 0.4rem 0 0;
+  color: var(--hero-text);
+}
+
+main section,
+form,
+details {
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--card);
+  box-shadow: var(--shadow);
+}
+
+form {
+  padding: 1.25rem;
+}
+
+.skip {
+  position: absolute;
+  top: 0;
+  left: -999px;
+  z-index: 5;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.skip:focus {
+  left: 0;
+}
+
+.grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+/* 4. Form controls -------------------------------------------------------- */
+label,
+legend {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+input,
+select {
+  width: 100%;
+  min-height: var(--tap-target);
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--muted);
+  border-radius: var(--radius-control);
+  background: var(--bg);
+  color: var(--fg);
+  font: inherit;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+}
+
+input[aria-invalid='true'] {
+  border-width: 2px;
+  border-color: var(--warn);
+}
+
+fieldset {
+  margin: 1rem 0;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+
+.field-error {
+  margin: 0.25rem 0 0;
+  color: var(--warn);
+  font-weight: 600;
+}
+
+.checks {
+  display: grid;
+  gap: 0.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.checks label {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: var(--tap-target);
+  margin: 0;
+  padding: 0 0.5rem;
+  border-radius: var(--radius-control);
+  font-weight: 400;
+}
+
+.checks label:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.checks input {
+  flex: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  min-height: 0;
+}
+
+/* A text box and its button(s) on one line; wraps on narrow screens. */
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.25rem 0 0.5rem;
+}
+
+.input-row input {
+  flex: 1 1 14rem;
+  width: auto;
+}
+
+/* 5. Buttons -------------------------------------------------------------- */
+button {
+  min-height: var(--tap-target);
+  padding: 0.5rem 1.1rem;
+  border: 2px solid var(--accent);
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  color: var(--on-accent);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button.alt {
+  background: transparent;
+  color: var(--accent);
+}
+
+button.small {
+  padding: 0.35rem 0.8rem;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+form > button[type='submit'] {
+  width: 100%;
+  min-height: 48px;
+  font-size: 1.05rem;
+}
+
+/* 6. Plan sections -------------------------------------------------------- */
+.note {
+  margin: 0.5rem 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radius-control);
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+
+.ok {
+  color: var(--ok);
+  font-weight: 600;
+}
+
+.badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0 0.5rem;
+  border: 1px solid var(--warn);
+  border-radius: 99px;
+  color: var(--warn);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Summary figures */
+.stats {
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  margin: 0.75rem 0 1rem;
+}
+
+.stat {
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+}
+
+.stat dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.stat dd {
+  margin: 0;
+  font-weight: 700;
+}
+
+/* Budget: chart beside the table on wide screens, stacked on narrow ones */
+.budget-section {
+  display: grid;
+  align-items: center;
+  gap: 1rem 1.5rem;
+  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
+}
+
+.budget-section h3 {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.budget-section .usage {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+@media (max-width: 46rem) {
+  .budget-section {
+    grid-template-columns: 1fr;
+  }
+}
+
+.donut {
+  display: grid;
+  place-items: center;
+  width: min(100%, 12.5rem);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  border-radius: 50%;
+  background: var(--donut-fill);
+}
+
+.donut-hole {
+  display: grid;
+  place-items: center;
+  width: 62%;
+  aspect-ratio: 1;
+  padding: 0.4rem;
+  border-radius: 50%;
+  background: var(--card);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 40rem;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+}
+
+td.num {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.spent {
+  width: 7.5rem;
+}
+
+.over-budget {
+  color: var(--warn);
+  font-weight: 700;
+}
+
+.swatch {
+  display: inline-block;
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.5rem;
+  border-radius: 3px;
+  background: var(--color);
+}
+
+.bar {
+  display: block;
+  height: 5px;
+  margin-top: 0.3rem;
+  border-radius: 3px;
+  background: var(--color);
+}
+
+/* Timeline: a vertical line with a dot per step */
+.timeline {
+  margin: 0.5rem 0 0 0.5rem;
+  padding: 0 0 0 1.4rem;
+  border-left: 3px solid var(--line);
+  list-style: none;
+}
+
+.timeline li {
+  position: relative;
+  margin: 0 0 1rem;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  top: 0.3rem;
+  left: calc(-1.4rem - 1.5px - 0.4rem);
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 2px solid var(--card);
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+progress {
+  width: 100%;
+  height: 0.6rem;
+  margin-bottom: 0.5rem;
+  accent-color: var(--accent);
+}
+
+/* Lists and links */
+.plain-list {
+  padding-left: 1.25rem;
+}
+
+.plain-list a {
+  display: inline-block;
+  padding: 0.35rem 0;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.25rem 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.chips a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0.3rem 0.9rem;
+  border: 1.5px solid var(--accent);
+  border-radius: 99px;
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.chips a:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* Past plans */
+.history-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.history-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Assistant chat */
+.chat-log {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.message {
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--bg);
+  white-space: pre-wrap;
+}
+
+.message.you {
+  border-color: var(--accent);
+}
+
+/* 7. Utilities ------------------------------------------------------------ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* 8. Print: only the plan itself ----------------------------------------- */
+@media print {
+  header,
+  form,
+  details,
+  button,
+  .skip,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  main section {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+}
+
+/* 9. Motion --------------------------------------------------------------- */
+@media (prefers-reduced-motion: no-preference) {
+  button {
+    transition: opacity 0.15s;
+  }
+}

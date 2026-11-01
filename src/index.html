@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Plan weddings, birthdays and other events: budget split, timeline, vendor checklist and ideas."
+    />
+    <title>Eventwise – AI Event Planning Assistant</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to main content</a>
+    <div class="wrap">
+      <header>
+        <h1>Eventwise</h1>
+        <p class="lead">
+          An AI-assisted planner for weddings, engagements, birthdays, baby showers, anniversaries,
+          housewarmings, corporate and community events: budget split, timeline, vendor checklist
+          and fresh ideas.
+        </p>
+      </header>
+
+      <main id="main">
+        <form id="plan-form" novalidate aria-labelledby="form-title">
+          <h2 id="form-title">Tell us about your event</h2>
+          <div class="grid">
+            <div>
+              <label for="type">Event type</label>
+              <select id="type" name="type" aria-describedby="error-type"></select>
+              <p class="field-error" id="error-type" hidden></p>
+            </div>
+            <div>
+              <label for="name">Event name (optional)</label>
+              <input id="name" name="name" maxlength="60" autocomplete="off" />
+            </div>
+            <div>
+              <label for="date">Event date</label>
+              <input id="date" name="date" type="date" required aria-describedby="error-date" />
+              <p class="field-error" id="error-date" hidden></p>
+            </div>
+            <div>
+              <label for="guests">Number of guests</label>
+              <input
+                id="guests"
+                name="guests"
+                type="number"
+                inputmode="numeric"
+                min="1"
+                max="5000"
+                step="1"
+                required
+                aria-describedby="error-guests"
+              />
+              <p class="field-error" id="error-guests" hidden></p>
+            </div>
+            <div>
+              <label for="budget">Total budget (₹)</label>
+              <input
+                id="budget"
+                name="budget"
+                type="number"
+                inputmode="numeric"
+                min="1000"
+                step="1"
+                required
+                aria-describedby="error-budget"
+              />
+              <p class="field-error" id="error-budget" hidden></p>
+            </div>
+            <div>
+              <label for="vibe">Style</label>
+              <select id="vibe" name="vibe"></select>
+            </div>
+            <div>
+              <label for="requests">Specific needs (optional)</label>
+              <input
+                id="requests"
+                name="requests"
+                maxlength="120"
+                placeholder="e.g. flowers, cake, balloons"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+          <fieldset>
+            <legend>What matters most? (optional, gives these categories a bigger share)</legend>
+            <div id="priority-options" class="checks"></div>
+          </fieldset>
+          <button type="submit">Create my plan</button>
+        </form>
+
+        <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
+        <div id="results" hidden></div>
+
+        <section class="no-print" aria-labelledby="history-heading">
+          <h2 id="history-heading">Your past plans</h2>
+          <p class="hint">Saved only in this browser on this device.</p>
+          <ul id="history-list" class="history-list"></ul>
+          <p id="history-empty" class="hint">
+            No plans yet. Create one above and it will appear here.
+          </p>
+          <button type="button" class="alt" id="clear-history" hidden>Clear all</button>
+        </section>
+      </main>
+    </div>
+
+    <!--
+      Scripts run in this order; each one may use only what the scripts above it
+      registered on the `Eventwise` namespace.
+    -->
+    <script src="js/namespace.js"></script>
+
+    <!-- Data -->
+    <script src="js/data/constants.js"></script>
+    <script src="js/data/content.js"></script>
+    <script src="js/data/events/wedding.js"></script>
+    <script src="js/data/events/birthday.js"></script>
+    <script src="js/data/events/community.js"></script>
+    <script src="js/data/events/engagement.js"></script>
+    <script src="js/data/events/babyshower.js"></script>
+    <script src="js/data/events/anniversary.js"></script>
+    <script src="js/data/events/corporate.js"></script>
+    <script src="js/data/events/housewarming.js"></script>
+
+    <!-- Helpers -->
+    <script src="js/lib/dates.js"></script>
+    <script src="js/lib/format.js"></script>
+    <script src="js/lib/dom.js"></script>
+    <script src="js/lib/storage.js"></script>
+
+    <!-- Planning logic (no DOM) -->
+    <script src="js/planner/validation.js"></script>
+    <script src="js/planner/budget.js"></script>
+    <script src="js/planner/timeline.js"></script>
+    <script src="js/planner/insights.js"></script>
+    <script src="js/planner/links.js"></script>
+    <script src="js/planner/plan.js"></script>
+    <script src="js/planner/history.js"></script>
+
+    <!-- Assistant (no DOM) -->
+    <script src="js/assistant/offline.js"></script>
+    <script src="js/assistant/ai.js"></script>
+
+    <!-- User interface -->
+    <script src="js/ui/state.js"></script>
+    <script src="js/ui/form.js"></script>
+    <script src="js/ui/history-view.js"></script>
+    <script src="js/ui/sections/overview.js"></script>
+    <script src="js/ui/sections/budget.js"></script>
+    <script src="js/ui/sections/checklist.js"></script>
+    <script src="js/ui/sections/venues.js"></script>
+    <script src="js/ui/sections/assistant.js"></script>
+    <script src="js/ui/results.js"></script>
+    <script src="js/ui/app.js"></script>
+  </body>
+</html>
